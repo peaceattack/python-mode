@@ -50,7 +50,7 @@ Currently it is used for things such as:
 * It can be used to save a global name cache, which is used for auto-import.
 
 * 在这个文件夹中，文件config.py包含项目的配置信息。 查看一下默认的config.py文件
-    （自动生成）了解更多的信息。
+    （自动生成）来了解更多的信息。
 * 能够保存项目修改历史，这样当您下一次打开项目时，您能够还原之前的更改。
 * 能够保存对象**信息。
 * 能够保存一个全局命名缓存，这个全局命名缓存被用来自动引入。
@@ -70,13 +70,13 @@ Currently it is used for things such as:
 
 By default, if `.ropeproject` is not found in the current directory, rope will
 look recursively for it in parent folders.
-默认情况下，如果`.ropeproject`在当前目录下没有找到，rope将递归地在上一层目录进行
+默认情况下，如果文件`.ropeproject`在当前目录下没有找到，rope将递归地在上一层目录进行
 查找。
 
 Warning: If rope finds `.ropeproject` in a parent dir, it will use it with
 all its child directories, which may slow scanning down (because of many,
 possibly unrelated, files)
-警告：如果rope在父目录查找到 `.ropeproject`，rope将会使用父目录下的所有子目录，
+警告：如果rope在父目录查找到文件`.ropeproject`，rope将会使用父目录下的所有子目录，
 这可能会降低扫描速度（因为父目录下有太多的文件可能与项目无关）
 
 Enable searching for |.ropeproject| in parent directories
@@ -127,26 +127,31 @@ Regenerate project cache on every save (if file has been modified)
 
 ------------------------------------------------------------------------------
 4.1 Completion ~
-                                                             *pymode-completion*
+    代码补全                                                         *pymode-completion*
 
 By default you can use <Ctrl-Space> for autocompletion. The first entry will
 be automatically selected and you can press <Return> to insert the entry in
 your code. <C-X><C-O> and <C-P>/<C-N> works too.
+默认情形下，您能够使用<Ctrl-Space> 键来实现代码补全功能。第一个条目将被自动选中，
+您可以在编辑代码时使用 <Return> 键来插入这个条目，<C-X><C-O> 和 <C-P>/<C-N> 
+键也能使用。
 
 Autocompletion is also called by typing a period in |Insert| mode by default.
-
+默认情形下，代码补全功能也能在|插入|模式下用.键来实现
 
 Turn on code completion support in the plugin       *'g:pymode_rope_completion'*
 >
+打开插件的代码补全功能
     let g:pymode_rope_completion = 1
 
 Turn on autocompletion when typing a period
+    当按下.键时打开代码补全功能
                                                *'g:pymode_rope_complete_on_dot'*
 >
     let g:pymode_rope_complete_on_dot = 1
 
 Keymap for autocomplete                        *'g:pymode_rope_completion_bind'*
->
+> 代码补全功能键布局
     let g:pymode_rope_completion_bind = '<C-Space>'
 
 Extended autocompletion (rope could complete objects which have not been
