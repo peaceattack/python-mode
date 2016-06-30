@@ -3,7 +3,7 @@
                                                                    *pymode-rope*
 
 Pymode supports Rope refactoring operations, code completion and code assists.
-pymode 支持 Rope 重建库操作，代码编译以及
+pymode 支持 Rope 重建库操作，代码编译以及编写代码时的一些辅助功能。
 Commands:
 命令：
 |:PymodeRopeAutoImport| -- Resolve import for element under cursor
@@ -52,8 +52,8 @@ Currently it is used for things such as:
 * 在这个文件夹中，文件config.py包含项目的配置信息。 查看一下默认的config.py文件
     （自动生成）了解更多的信息。
 * 能够保存项目修改历史，这样当您下一次打开项目时，您能够还原之前的更改。
-* It can be used to save information about object inferences.
-* It can be used to save a global name cache, which is used for auto-import.
+* 能够保存对象**信息。
+* 能够保存一个全局命名缓存，这个全局命名缓存被用来自动引入。
 
 
 
@@ -70,18 +70,24 @@ Currently it is used for things such as:
 
 By default, if `.ropeproject` is not found in the current directory, rope will
 look recursively for it in parent folders.
+默认情况下，如果`.ropeproject`在当前目录下没有找到，rope将递归地在上一层目录进行
+查找。
 
 Warning: If rope finds `.ropeproject` in a parent dir, it will use it with
 all its child directories, which may slow scanning down (because of many,
 possibly unrelated, files)
+警告：如果rope在父目录查找到 `.ropeproject`，rope将会使用父目录下的所有子目录，
+这可能会降低扫描速度（因为父目录下有太多的文件可能与项目无关）
 
 Enable searching for |.ropeproject| in parent directories
+使能在父目录下查找|.ropeproject|的功能。
                                                   *'g:pymode_rope_lookup_project'*
 >
     let g:pymode_rope_lookup_project = 0
 
 You can also manually set the rope project directory. If not specified rope will
 use the current directory.
+你也可以手动指定rope项目的目录，如果不指定，rope将使用当前目录。                                      
                                                   *'g:pymode_rope_project_root'*
 >
     let g:pymode_rope_project_root = ""
@@ -92,6 +98,11 @@ keep it outside of your project root. The rope library treats this folder as a
 project resource, so the path will always be relative to your project root (a
 leading '/' will be ignored). You may use `'..'` path segments to place the
 folder outside of your project root.
+
+
+
+
+
                                                  *'g:pymode_rope_ropefolder'*
 >
     let g:pymode_rope_ropefolder='.ropeproject'
@@ -99,14 +110,19 @@ folder outside of your project root.
 
 
 Show documentation for element under cursor ~
+在光标下显示元素文档
 
 Show documentation for object under cursor.      *'g:pymode_rope_show_doc_bind'*
+在光标下显示对象文档
 Leave empty to disable the key binding.
+=后留空可以关闭键绑定
 >
     let g:pymode_rope_show_doc_bind = '<C-c>d'
 
 Regenerate project cache on every save (if file has been modified)
 >
+每次保存时重构项目缓存（如果文件被修改）
+
     let g:pymode_rope_regenerate_on_write = 1
 
 ------------------------------------------------------------------------------
