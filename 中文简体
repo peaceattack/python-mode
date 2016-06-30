@@ -1,1 +1,338 @@
-测试
+==============================================================================
+3. Rope 支持 ~
+                                                                   *pymode-rope*
+
+Pymode supports Rope refactoring operations, code completion and code assists.
+pymode 支持 Rope 重建库操作，代码编译以及
+Commands:
+命令：
+|:PymodeRopeAutoImport| -- Resolve import for element under cursor
+|:PymodeRopeAutoImport| -- Resolve import for element under cursor
+|:PymodeRopeModuleToPackage| -- Convert current module to package
+|:PymodeRopeNewProject| -- Open new Rope project in current working directory
+|:PymodeRopeRedo| -- Redo changes from last refactoring
+|:PymodeRopeRegenerate| -- Regenerate the project cache
+|:PymodeRopeRenameModule| -- Rename current module
+|:PymodeRopeUndo| -- Undo changes from last refactoring
+
+
+Turn on the rope script                                        *'g:pymode_rope'*
+打开rope脚本（开启rope支持）
+>
+    let g:pymode_rope = 1
+
+.ropeproject Folder ~
+                                                                  *.ropeproject*
+.ropeproject 文件夹 ~                                                                 
+
+
+*:PymodeRopeNewProject* [<path>] -- Open new Rope project in the given path
+*:PymodeRopeNewProject* [<path>] -- 在给出路径中打开新的Rope项目
+*:PymodeRopeRegenerate* -- Regenerate the project cache
+*:PymodeRopeRegenerate* -- 重构项目缓存
+Rope uses a folder inside projects for holding project configuration and data.
+Its default name is `.ropeproject`. It is recommended that you do not add the
+.ropeproject folder to version control system.
+Rope 利用项目架构中的一个文件夹来组织项目中的配置和数据。
+其文件夹的默认名称是'.ropeproject'.这里建议你不要把.ropeproject文件夹添加到版本
+控制系统里。
+
+
+
+Currently it is used for things such as:
+
+* The config.py file in this folder contains project configuration. Have
+    a look at the default config.py file (which is created when it
+    does not exist) for more information.
+* It can be used for saving project history, so that the next time you open the
+    project you can undo past changes.
+* It can be used to save information about object inferences.
+* It can be used to save a global name cache, which is used for auto-import.
+
+* 在这个文件夹中，文件config.py包含项目的配置信息。 查看一下默认的config.py文件
+    （自动生成）了解更多的信息。
+* 能够保存项目修改历史，这样当您下一次打开项目时，您能够还原之前的更改。
+* It can be used to save information about object inferences.
+* It can be used to save a global name cache, which is used for auto-import.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+By default, if `.ropeproject` is not found in the current directory, rope will
+look recursively for it in parent folders.
+
+Warning: If rope finds `.ropeproject` in a parent dir, it will use it with
+all its child directories, which may slow scanning down (because of many,
+possibly unrelated, files)
+
+Enable searching for |.ropeproject| in parent directories
+                                                  *'g:pymode_rope_lookup_project'*
+>
+    let g:pymode_rope_lookup_project = 0
+
+You can also manually set the rope project directory. If not specified rope will
+use the current directory.
+                                                  *'g:pymode_rope_project_root'*
+>
+    let g:pymode_rope_project_root = ""
+
+
+The location of the `.ropeproject` folder may also be overridden if you wish to
+keep it outside of your project root. The rope library treats this folder as a
+project resource, so the path will always be relative to your project root (a
+leading '/' will be ignored). You may use `'..'` path segments to place the
+folder outside of your project root.
+                                                 *'g:pymode_rope_ropefolder'*
+>
+    let g:pymode_rope_ropefolder='.ropeproject'
+
+
+
+Show documentation for element under cursor ~
+
+Show documentation for object under cursor.      *'g:pymode_rope_show_doc_bind'*
+Leave empty to disable the key binding.
+>
+    let g:pymode_rope_show_doc_bind = '<C-c>d'
+
+Regenerate project cache on every save (if file has been modified)
+>
+    let g:pymode_rope_regenerate_on_write = 1
+
+------------------------------------------------------------------------------
+4.1 Completion ~
+                                                             *pymode-completion*
+
+By default you can use <Ctrl-Space> for autocompletion. The first entry will
+be automatically selected and you can press <Return> to insert the entry in
+your code. <C-X><C-O> and <C-P>/<C-N> works too.
+
+Autocompletion is also called by typing a period in |Insert| mode by default.
+
+
+Turn on code completion support in the plugin       *'g:pymode_rope_completion'*
+>
+    let g:pymode_rope_completion = 1
+
+Turn on autocompletion when typing a period
+                                               *'g:pymode_rope_complete_on_dot'*
+>
+    let g:pymode_rope_complete_on_dot = 1
+
+Keymap for autocomplete                        *'g:pymode_rope_completion_bind'*
+>
+    let g:pymode_rope_completion_bind = '<C-Space>'
+
+Extended autocompletion (rope could complete objects which have not been
+imported) from project                              *'g:pymode_rope_autoimport'*
+>
+    let g:pymode_rope_autoimport = 0
+
+Load modules to autoimport by default       *'g:pymode_rope_autoimport_modules'*
+>
+    let g:pymode_rope_autoimport_modules = ['os', 'shutil', 'datetime'])
+
+Offer to unresolved import object after completion.
+>
+    let g:pymode_rope_autoimport_import_after_complete = 0
+
+
+------------------------------------------------------------------------------
+4.2 Find definition ~
+                                                            *pymode-rope-findit*
+
+By default when you press *<C-C>g* on any object in your code you will be moved
+to definition. 
+Leave empty for disable key binding.      *'g:pymode_rope_goto_definition_bind'*
+>
+    let g:pymode_rope_goto_definition_bind = '<C-c>g'
+
+Command for open window when definition has been found
+Values are (`e`, `new`, `vnew`)                  *'g:pymode_rope_goto_definition_cmd'*
+>
+    let g:pymode_rope_goto_definition_cmd = 'new'
+
+------------------------------------------------------------------------------
+4.3 Refactoring ~
+                                                       *pymode-rope-refactoring*
+
+Rename method/function/class/variable in the project ~
+
+Pymode can rename everything: classes, functions, modules, packages, methods,
+variables and keyword arguments.
+
+Keymap for rename method/function/class/variables under cursor
+                                                   *'g:pymode_rope_rename_bind'*
+>
+    let g:pymode_rope_rename_bind = '<C-c>rr'
+
+
+Rename a current module/package ~
+
+*:PymodeRopeRenameModule* -- Rename current module
+
+Keymap for rename current module            *'g:pymode_rope_rename_module_bind'*
+>
+    let g:pymode_rope_rename_module_bind = '<C-c>r1r'
+
+
+Imports ~
+
+*:PymodeRopeAutoImport* -- Resolve import for element under cursor
+
+Organize imports sorts imports, too. It does that according to PEP8. Unused
+imports will be dropped.
+Keymap                                   *'g:pymode_rope_organize_imports_bind'*
+>
+    let g:pymode_rope_organize_imports_bind = '<C-c>ro'
+
+Insert import for current word under cursor    *'g:pymode_rope_autoimport_bind'*
+Should be enabled |'g:pymode_rope_autoimport'|
+>
+    let g:pymode_rope_autoimport_bind = '<C-c>ra'
+
+
+Convert module to package ~
+                                        *'g:pymode_rope_module_to_package_bind'*
+
+*:PymodeRopeModuleToPackage* -- convert current module to package
+
+Keybinding:
+>
+    let g:pymode_rope_module_to_package_bind = '<C-c>r1p'
+
+
+Extract method/variable ~
+                                                           *pymode-rope-extract*
+
+Extract method/variable from selected lines.
+
+                                           *'g:pymode_rope_extract_method_bind'*
+                                         *'g:pymode_rope_extract_variable_bind'*
+>
+    let g:pymode_rope_extract_method_bind = '<C-c>rm'
+    let g:pymode_rope_extract_variable_bind = '<C-c>rl'
+
+
+Use function ~
+                                                               *pymode-rope-use*
+
+It tries to find the places in which a function can be used and changes the
+code to call it instead.
+>
+    let g:pymode_rope_use_function_bind = '<C-c>ru'
+
+
+Move method/fields ~
+                                                              *pymode-rope-move*
+
+It happens when you perform move refactoring on a method of a class. In this
+refactoring, a method of a class is moved to the class of one of its
+attributes. The old method will call the new method. If you want to change all
+of the occurrences of the old method to use the new method you can inline it
+afterwards.
+>
+    let g:pymode_rope_move_bind = '<C-c>rv'
+
+Change function signature ~
+>
+    let g:pymode_rope_change_signature_bind = '<C-c>rs'
+
+
+------------------------------------------------------------------------------
+4.4 Undo/Redo changes ~
+                                                              *pymode-rope-undo* 
+                                                              *pymode-rope-redo*
+
+Commands:
+
+*:PymodeRopeUndo* -- Undo last changes in the project
+*:PymodeRopeRedo* -- Redo last changes in the project
+
+
+==============================================================================
+5. Syntax ~
+                                                                 *pymode-syntax*
+
+Turn on pymode syntax                                        *'g:pymode_syntax'*
+>
+    let g:pymode_syntax = 1
+
+Slower syntax synchronization that is better at handling code blocks in
+docstrings. Consider disabling this on slower hardware.
+                                                   *'g:pymode_syntax_slow_sync'*
+>
+    let g:pymode_syntax_slow_sync = 1
+
+Enable all python highlights                          *'g:pymode_syntax_all'*
+>
+    let g:pymode_syntax_all = 1
+
+Highlight "print" as a function            *'g:pymode_syntax_print_as_function'*
+>
+    let g:pymode_syntax_print_as_function = 0
+
+Highlight "async/await" keywords       *'g:pymode_syntax_highlight_async_await'*
+>
+    let g:pymode_syntax_highlight_async_await = g:pymode_syntax_all
+
+Highlight '=' operator              *'g:pymode_syntax_highlight_equal_operator'*
+>
+    let g:pymode_syntax_highlight_equal_operator = g:pymode_syntax_all
+
+Highlight '*' operator              *'g:pymode_syntax_highlight_stars_operator'*
+>
+    let g:pymode_syntax_highlight_stars_operator = g:pymode_syntax_all
+
+Highlight 'self' keyword                      *'g:pymode_syntax_highlight_self'*
+>
+    let g:pymode_syntax_highlight_self = g:pymode_syntax_all
+
+Highlight indent's errors                      *'g:pymode_syntax_indent_errors'*
+>
+    let g:pymode_syntax_indent_errors = g:pymode_syntax_all
+
+Highlight space's errors                        *'g:pymode_syntax_space_errors'*
+>
+    let g:pymode_syntax_space_errors = g:pymode_syntax_all
+
+Highlight string formatting                 *'g:pymode_syntax_string_formatting'*
+                                               *'g:pymode_syntax_string_format'*
+                                            *'g:pymode_syntax_string_templates'*
+                                                    *'g:pymode_syntax_doctests'*
+>
+    let g:pymode_syntax_string_formatting = g:pymode_syntax_all
+    let g:pymode_syntax_string_format = g:pymode_syntax_all
+    let g:pymode_syntax_string_templates = g:pymode_syntax_all
+    let g:pymode_syntax_doctests = g:pymode_syntax_all
+
+Highlight builtin objects (True, False, ...)    *'g:pymode_syntax_builtin_objs'*
+>
+    let g:pymode_syntax_builtin_objs = g:pymode_syntax_all
+
+Highlight builtin types (str, list, ...)       *'g:pymode_syntax_builtin_types'*
+>
+    let g:pymode_syntax_builtin_types = g:pymode_syntax_all
+
+Highlight exceptions (TypeError, ValueError, ...) 
+                                        *'g:pymode_syntax_highlight_exceptions'*
+>
+    let g:pymode_syntax_highlight_exceptions = g:pymode_syntax_all
+
+Highlight docstrings as pythonDocstring (otherwise as pythonString)
+                                                  *'g:pymode_syntax_docstrings'*
+>
+    let g:pymode_syntax_docstrings = g:pymode_syntax_all
+
+
+==============================================================================
